@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deep Fake Image Detection</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      input[type="file"] {
+        margin: 10px 0;
+      }
+
+      img {
+        max-width: 300px;
+        display: none;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      #imageSpinner {
+        display: none;
+        font-size: 18px;
+        color: #555;
+        margin-top: 10px;
+      }
+
+      #detectionResult {
+        margin-top: 15px;
+        font-size: 18px;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 20px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      .progress-bar-container {
+        background-color: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        width: 300px;
+        height: 20px;
+        margin-top: 10px;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: #4caf50;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Deep Fake Image Detection</h1>
+
+    <input
+      type="file"
+      id="imageInput"
+      accept="image/*"
+      onchange="previewImage(event)"
+    />
+    <br />
+    <img id="imagePreview" alt="Image Preview" />
+    <br />
+    <button onclick="submitImage()">Submit Image</button>
+
+    <div id="imageSpinner">🌀 Processing...</div>
+    <div id="detectionResult"></div>
+
+    <script>
+      function previewImage(event) {
+        const imageInput = document.getElementById("imageInput");
+        const imagePreview = document.getElementById("imagePreview");
+        const file = imageInput.files[0];
+
+        if (file) {
+          const url = URL.createObjectURL(file);
+          imagePreview.src = url;
+          imagePreview.style.display = "block";
+        }
+      }
+
+      function submitImage() {
+        const imageInput = document.getElementById("imageInput");
+        const imageSpinner = document.getElementById("imageSpinner");
+        const detectionResult = document.getElementById("detectionResult");
+
+        const file = imageInput.files[0];
+        if (!file) {
+          alert("Please upload an image file.");
+          return;
+        }
+
+        imageSpinner.style.display = "block";
+        detectionResult.innerHTML = "";
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        fetch("/predict", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            imageSpinner.style.display = "none";
+            const confidence = (data.confidence * 100).toFixed(2);
+
+            detectionResult.innerHTML = `
+              <p><strong>Prediction:</strong> ${data.prediction}</p>
+              <p><strong>Confidence:</strong> ${confidence}%</p>
+              <div class="progress-bar-container">
+                <div class="progress-bar" style="width: ${confidence}%;"></div>
+              </div>
+            `;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            detectionResult.innerHTML =
+              "An error occurred while processing the image.";
+            imageSpinner.style.display = "none";
+          });
+      }
+    </script>
+  </body>
+</html>
