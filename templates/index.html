@@ -7,8 +7,8 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        display: flex; 
+        background: #d3d3d3;
+        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -30,6 +30,24 @@
         margin: 10px 0;
         border: 1px solid #ccc;
         border-radius: 5px;
+      }
+
+      #container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .footer {
+        width: 100%;
+        text-align: center;
+        color: gray;
+        padding: 10px 0;
       }
 
       #imageSpinner {
@@ -58,8 +76,34 @@
         background: #45a049;
       }
 
+      .file-input-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      .file-label {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 12px 30px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+      }
+
+      .file-label:hover {
+        background-color: #45a049;
+      }
+
       .progress-bar-container {
-        background-color: #eee;
+        background-color: red;
         border-radius: 10px;
         overflow: hidden;
         width: 300px;
@@ -75,21 +119,29 @@
     </style>
   </head>
   <body>
-    <h1>Deep Fake Image Detection</h1>
+    <div id="container">
+      <h1>Deep Fake Image Detection</h1>
 
-    <input
-      type="file"
-      id="imageInput"
-      accept="image/*"
-      onchange="previewImage(event)"
-    />
-    <br />
-    <img id="imagePreview" alt="Image Preview" />
-    <br />
-    <button onclick="submitImage()">Submit Image</button>
+      <div class="file-input-container">
+        <label for="imageInput" class="file-label">Choose an Image</label>
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          onchange="previewImage(event)"
+        />
+      </div>
+      <br />
+      <img id="imagePreview" alt="Image Preview" />
+      <br />
+      <button onclick="submitImage()">Submit Image</button>
 
-    <div id="imageSpinner">🌀 Processing...</div>
-    <div id="detectionResult"></div>
+      <div id="imageSpinner">🌀 Processing...</div>
+      <div id="detectionResult"></div>
+    </div>
+    <div class="footer">
+      <p>© 2025 Deep Fake Detection. All rights reserved.</p>
+    </div>
 
     <script>
       function previewImage(event) {
