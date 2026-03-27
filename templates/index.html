@@ -1,200 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Deep Fake Image Detection</title>
+
+    <title>Deep Fake Detection</title>
+
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #d3d3d3;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
+      * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
       }
 
-      h1 {
+      body {
+        background: #f5f7fb;
         color: #333;
       }
 
-      input[type="file"] {
-        margin: 10px 0;
-      }
+      /* NAVBAR */
 
-      img {
-        max-width: 300px;
-        display: none;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
-      #container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
+      nav {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-      }
-      .footer {
-        width: 100%;
-        text-align: center;
-        color: gray;
-        padding: 10px 0;
+        padding: 20px 80px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       }
 
-      #imageSpinner {
-        display: none;
-        font-size: 18px;
+      nav h2 {
+        color: #5b5bd6;
+      }
+
+      nav a {
+        text-decoration: none;
+        margin-left: 25px;
         color: #555;
-        margin-top: 10px;
       }
 
-      #detectionResult {
-        margin-top: 15px;
-        font-size: 18px;
+      nav a:hover {
+        color: #5b5bd6;
+      }
+
+      /* PAGE TITLE */
+
+      .page-header {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .page-header h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+
+      /* CONTAINER */
+
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         text-align: center;
       }
 
-      button {
-        padding: 10px 20px;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+      /* FILE INPUT */
 
-      button:hover {
-        background: #45a049;
-      }
-
-      .file-input-container {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        margin-bottom: 20px;
-      }
-
-      input[type="file"] {
-        display: none;
+      .file-input {
+        margin-top: 20px;
       }
 
       .file-label {
-        background-color: #4caf50;
-        color: #fff;
-        padding: 12px 30px;
+        display: inline-block;
+        padding: 12px 25px;
+        background: #5b5bd6;
+        color: white;
         border-radius: 30px;
         cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-        display: inline-block;
+        margin-bottom: 15px;
       }
 
       .file-label:hover {
-        background-color: #45a049;
+        background: #4a4ac7;
       }
 
-      .progress-bar-container {
-        background-color: red;
+      input[type="file"] {
+        display: none;
+      }
+
+      /* IMAGE PREVIEW */
+
+      img {
+        max-width: 250px;
+        margin-top: 15px;
         border-radius: 10px;
-        overflow: hidden;
-        width: 300px;
-        height: 20px;
-        margin-top: 10px;
+        display: none;
       }
 
-      .progress-bar {
+      /* BUTTON */
+
+      button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        border: none;
+        background: #5b5bd6;
+        color: white;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      button:hover {
+        background: #4a4ac7;
+      }
+
+      /* RESULT */
+
+      .result {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+
+      /* PROGRESS BAR */
+
+      .progress-container {
+        background: #eee;
+        height: 15px;
+        border-radius: 20px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+
+      .progress {
         height: 100%;
-        background-color: #4caf50;
-        transition: width 0.3s ease;
+        background: #5b5bd6;
+        width: 0%;
+        transition: width 0.4s;
+      }
+
+      /* LOADING */
+
+      .loading {
+        margin-top: 10px;
+        display: none;
+        color: #777;
       }
     </style>
   </head>
+
   <body>
-    <div id="container">
+    <!-- NAVBAR -->
+
+    <nav>
+      <h2>DeepFake AI</h2>
+
+       <div>
+    <a href="/">Home</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/model-info">Model Info</a>
+  </div>
+</nav>
+    </nav>
+
+    <!-- HEADER -->
+
+    <section class="page-header">
       <h1>Deep Fake Image Detection</h1>
+      <p>Upload an image and our AI will analyze it.</p>
+    </section>
 
-      <div class="file-input-container">
-        <label for="imageInput" class="file-label">Choose an Image</label>
-        <input
-          type="file"
-          id="imageInput"
-          accept="image/*"
-          onchange="previewImage(event)"
-        />
+    <!-- DETECTION BOX -->
+
+    <div class="container">
+      <label for="imageInput" class="file-label"> Choose Image </label>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        onchange="previewImage(event)"
+      />
+
+      <img id="preview" />
+
+      <br />
+
+      <button onclick="submitImage()">Detect Image</button>
+
+      <div class="loading" id="loading">Processing Image...</div>
+
+      <div class="result" id="result"></div>
+
+      <div class="progress-container">
+        <div class="progress" id="progress"></div>
       </div>
-      <br />
-      <img id="imagePreview" alt="Image Preview" />
-      <br />
-      <button onclick="submitImage()">Submit Image</button>
-
-      <div id="imageSpinner">🌀 Processing...</div>
-      <div id="detectionResult"></div>
-    </div>
-    <div class="footer">
-      <p>© 2025 Deep Fake Detection. All rights reserved.</p>
     </div>
 
     <script>
-      function previewImage(event) {
-        const imageInput = document.getElementById("imageInput");
-        const imagePreview = document.getElementById("imagePreview");
-        const file = imageInput.files[0];
+      /* IMAGE PREVIEW */
 
-        if (file) {
-          const url = URL.createObjectURL(file);
-          imagePreview.src = url;
-          imagePreview.style.display = "block";
-        }
+      function previewImage(event) {
+        const preview = document.getElementById("preview");
+
+        preview.src = URL.createObjectURL(event.target.files[0]);
+        preview.style.display = "block";
       }
 
-      function submitImage() {
-        const imageInput = document.getElementById("imageInput");
-        const imageSpinner = document.getElementById("imageSpinner");
-        const detectionResult = document.getElementById("detectionResult");
+      /* SUBMIT IMAGE */
 
-        const file = imageInput.files[0];
+      function submitImage() {
+        const input = document.getElementById("imageInput");
+        const file = input.files[0];
+
         if (!file) {
-          alert("Please upload an image file.");
+          alert("Please select an image");
+
           return;
         }
 
-        imageSpinner.style.display = "block";
-        detectionResult.innerHTML = "";
-
         const formData = new FormData();
+
         formData.append("image", file);
+
+        document.getElementById("loading").style.display = "block";
 
         fetch("/predict", {
           method: "POST",
           body: formData,
         })
-          .then((response) => response.json())
+          .then((res) => res.json())
+
           .then((data) => {
-            imageSpinner.style.display = "none";
+            document.getElementById("loading").style.display = "none";
+
             const confidence = (data.confidence * 100).toFixed(2);
 
-            detectionResult.innerHTML = `
-              <p><strong>Prediction:</strong> ${data.prediction}</p>
-              <p><strong>Confidence:</strong> ${confidence}%</p>
-              <div class="progress-bar-container">
-                <div class="progress-bar" style="width: ${confidence}%;"></div>
-              </div>
-            `;
+            document.getElementById("result").innerHTML =
+              "<b>Prediction:</b> " +
+              data.prediction +
+              "<br><b>Confidence:</b> " +
+              confidence +
+              "%";
+
+            document.getElementById("progress").style.width = confidence + "%";
           })
-          .catch((error) => {
-            console.error("Error:", error);
-            detectionResult.innerHTML =
-              "An error occurred while processing the image.";
-            imageSpinner.style.display = "none";
+
+          .catch((err) => {
+            document.getElementById("loading").innerHTML = "Error occurred";
           });
       }
     </script>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Model Information</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f5f7fb;
+        margin: 0;
+        color: #333;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 80px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      nav h2 {
+        color: #5b5bd6;
+      }
+
+      nav a {
+        text-decoration: none;
+        margin-left: 20px;
+        color: #555;
+      }
+
+      .header {
+        text-align: center;
+        padding: 70px;
+        background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+      }
+
+      .section {
+        max-width: 900px;
+        margin: auto;
+        padding: 60px 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        color: #777;
+        background: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <h2>DeepFake AI</h2>
+
+      <div>
+        <a href="/">Home</a>
+        <a href="/detect">Detect</a>
+        <a href="/how-it-works">How it Works</a>
+      </div>
+    </nav>
+
+    <section class="header">
+      <h1>AI Model Information</h1>
+      <p>Understanding the technology behind deepfake detection</p>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h3>Model Used</h3>
+        <p>
+          This system uses a Vision Transformer (ViT) model for image
+          classification. The model analyzes image patterns to detect whether
+          the image is real or generated using deepfake technology.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Dataset</h3>
+        <p>
+          The model was trained on a dataset containing both real and deepfake
+          images to learn visual differences between authentic and manipulated
+          images.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Technologies Used</h3>
+        <p>
+          Python, Flask, HuggingFace Transformers, PyTorch, Vision Transformer
+          (ViT), HTML, CSS, and JavaScript.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Model Accuracy</h3>
+        <p>
+          The trained model achieves high accuracy in detecting fake images by
+          analyzing image textures, patterns, and inconsistencies.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Deep Fake Image Detection</p>
+    </footer>
+  </body>
+</html>

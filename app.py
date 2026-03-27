@@ -3,54 +3,72 @@ from transformers import ViTImageProcessor, ViTForImageClassification
 from PIL import Image
 import torch
 
-# Initialize the Flask app
+# Initialize Flask app
 app = Flask(__name__)
 
-# Define the model and processor directory
-model_dir = "./model/deepfake_vs_real_image_detection" 
+# Model directory
+model_dir = "./model/deepfake_vs_real_image_detection"
 
-# Load the model using safetensors
+# Load model
 model = ViTForImageClassification.from_pretrained(
     model_dir,
     local_files_only=True,
     trust_remote_code=True
 )
 
-# Load the processor
+# Load processor
 processor = ViTImageProcessor.from_pretrained(model_dir)
 
-print("Model and Processor loaded successfully!")
+print("✅ Model and Processor loaded successfully!")
 
+# ---------------- ROUTES ---------------- #
+
+# Welcome page
 @app.route('/')
-def home():
+def welcome():
+    return render_template('Home.html')
+
+# Detection page
+@app.route('/detect')
+def detect():
     return render_template('index.html')
 
-# Define the prediction endpoint
-@app.route('/predict', methods=['POST']) 
+@app.route('/how-it-works')
+def how():
+    return render_template("how-it-works.html")
+
+@app.route('/model-info')
+def model_info():
+    return render_template("model-info.html")
+
+
+# ---------------- PREDICTION API ---------------- #
+
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Check if an image file is included in the request
-        if 'image' not in request.files:
-            return jsonify({"error": "No image file found in the request"}), 400
 
-        # Read the image file from the request
+        if 'image' not in request.files:
+            return jsonify({"error": "No image uploaded"}), 400
+
         file = request.files['image']
+
         image = Image.open(file.stream).convert("RGB")
 
-        # Preprocess the image
+        # Preprocess
         inputs = processor(images=image, return_tensors="pt")
 
-        # Perform inference
+        # Model inference
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
-            predicted_class_id = logits.argmax(-1).item()
 
-        # Map the predicted class ID to the corresponding label
+        predicted_class_id = logits.argmax(-1).item()
+
         predicted_label = model.config.id2label[predicted_class_id]
+
         confidence_score = torch.softmax(logits, dim=-1)[0][predicted_class_id].item()
 
-        # Return the prediction as JSON
         return jsonify({
             "prediction": predicted_label,
             "confidence": confidence_score
@@ -59,6 +77,8 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Run the Flask app
+
+# ---------------- RUN APP ---------------- #
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)
