@@ -2,129 +2,305 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Deep Fake Image Detection</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
+      }
+
+      :root {
+        --primary: #6c63ff;
+        --primary-dark: #5548ff;
+        --text: #1f2937;
+        --text-light: #6b7280;
       }
 
       body {
-        background: #f5f7fb;
-        color: #333;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(to bottom right, #eef2ff, #f8fbff);
+        color: var(--text);
+        overflow-x: hidden;
       }
 
       /* NAVBAR */
 
       nav {
+        width: 100%;
+        padding: 20px 8%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 80px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
       }
 
       .logo {
-        color: #5b5bd6;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      nav a {
         text-decoration: none;
-        margin-left: 25px;
-        color: #555;
-        font-size: 15px;
+        color: var(--primary);
+        font-size: 28px;
+        font-weight: 800;
       }
 
-      nav a:hover {
-        color: #5b5bd6;
+      nav ul {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        list-style: none;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        transition: 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: var(--primary);
       }
 
       /* HERO */
 
       .hero {
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 90px 80px;
-        flex-wrap: wrap;
-        background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+        padding: 80px 8%;
+        gap: 60px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: rgba(108, 99, 255, 0.12);
+        border-radius: 50%;
+        filter: blur(120px);
+        top: -150px;
+        left: -100px;
       }
 
       .hero-text {
-        max-width: 520px;
+        flex: 1;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: rgba(108, 99, 255, 0.12);
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 25px;
       }
 
       .hero-text h1 {
-        font-size: 48px;
-        margin-bottom: 20px;
+        font-size: 68px;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        font-weight: 800;
       }
 
       .hero-text p {
         font-size: 18px;
-        line-height: 1.6;
+        line-height: 1.9;
+        color: var(--text-light);
         margin-bottom: 35px;
-        color: #555;
+        max-width: 650px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
       }
 
       .hero-btn {
-        padding: 14px 35px;
-        background: #5b5bd6;
-        color: white;
+        padding: 15px 34px;
+        border-radius: 18px;
         text-decoration: none;
-        border-radius: 40px;
-        font-size: 16px;
+        font-weight: 600;
+        transition: 0.3s ease;
       }
 
-      .hero-btn:hover {
-        background: #4a4ac7;
+      .primary-btn {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 12px 28px rgba(108, 99, 255, 0.25);
       }
 
-      .hero img {
-        width: 420px;
-        max-width: 100%;
+      .primary-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-4px);
+      }
+
+      .secondary-btn {
+        background: white;
+        color: var(--text);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .secondary-btn:hover {
+        transform: translateY(-4px);
+      }
+
+      /* HERO IMAGE */
+
+      .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-image img {
+        width: 100%;
+        max-width: 500px;
+        animation: float 4s ease-in-out infinite;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.12));
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+
+        50% {
+          transform: translateY(-15px);
+        }
+
+        100% {
+          transform: translateY(0px);
+        }
       }
 
       /* FEATURES */
 
       .features {
-        padding: 80px;
-        text-align: center;
+        padding: 120px 8%;
       }
 
-      .features h2 {
-        font-size: 32px;
-        margin-bottom: 50px;
+      .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+      }
+
+      .section-title h2 {
+        font-size: 46px;
+        margin-bottom: 18px;
+      }
+
+      .section-title p {
+        max-width: 700px;
+        margin: auto;
+        color: var(--text-light);
+        line-height: 1.8;
       }
 
       .feature-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 30px;
       }
 
       .card {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-        transition: 0.3s;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 35px;
+        border-radius: 30px;
+        transition: 0.35s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        background: rgba(108, 99, 255, 0.08);
+        border-radius: 50%;
+        top: -50px;
+        right: -50px;
       }
 
       .card:hover {
-        transform: translateY(-6px);
+        transform: translateY(-10px);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-icon {
+        width: 65px;
+        height: 65px;
+        background: var(--primary);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+        margin-bottom: 24px;
       }
 
       .card h3 {
-        color: #5b5bd6;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      .card p {
+        color: var(--text-light);
+        line-height: 1.8;
+      }
+
+      /* STATS */
+
+      .stats {
+        padding: 0 8% 100px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+      }
+
+      .stat-box {
+        background: white;
+        padding: 40px;
+        border-radius: 24px;
+        text-align: center;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .stat-box h2 {
+        color: var(--primary);
+        font-size: 42px;
         margin-bottom: 10px;
+      }
+
+      .stat-box p {
+        color: var(--text-light);
       }
 
       /* FOOTER */
@@ -132,9 +308,65 @@
       footer {
         background: white;
         text-align: center;
-        padding: 20px;
-        color: #777;
-        margin-top: 40px;
+        padding: 30px;
+        color: var(--text-light);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 992px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+          padding-top: 120px;
+        }
+
+        .hero-text p {
+          margin: auto auto 35px;
+        }
+
+        .hero-buttons {
+          justify-content: center;
+        }
+
+        .hero-text h1 {
+          font-size: 48px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 18px 20px;
+        }
+
+        nav ul {
+          gap: 15px;
+        }
+
+        .hero {
+          padding: 100px 20px 60px;
+        }
+
+        .hero-text h1 {
+          font-size: 40px;
+        }
+
+        .hero-text p {
+          font-size: 16px;
+        }
+
+        .section-title h2 {
+          font-size: 34px;
+        }
+
+        .features {
+          padding: 90px 20px;
+        }
+
+        .stats {
+          padding: 0 20px 80px;
+        }
       }
     </style>
   </head>
@@ -145,58 +377,137 @@
     <nav>
       <a href="/" class="logo">DeepFake AI</a>
 
-      <div>
-        <a href="/detect">Detect</a>
-        <a href="/how-it-works">How It Works</a>
-        <a href="/model-info">Model Info</a>
-      </div>
+      <ul>
+        <li><a href="/detect">Detect</a></li>
+        <li><a href="/how-it-works">How It Works</a></li>
+        <li><a href="/model-info">Model Info</a></li>
+      </ul>
     </nav>
 
     <!-- HERO -->
 
     <section class="hero">
       <div class="hero-text">
-        <h1>Detect Fake Images Using AI</h1>
+        <div class="tag">AI Powered Deep Fake Detection</div>
+
+        <h1>Detect Fake Images Using Advanced AI Technology</h1>
 
         <p>
-          Our AI-powered system analyzes images to determine whether they are
-          real or generated using deepfake technology. Upload an image and
-          receive instant results.
+          Our Vision Transformer based AI system analyzes images, facial
+          textures, lighting inconsistencies, and synthetic patterns to detect
+          whether an image is real or generated using deepfake technology.
         </p>
 
-        <a href="/detect" class="hero-btn"> Start Detection </a>
+        <div class="hero-buttons">
+          <a href="/detect" class="hero-btn primary-btn"> Start Detection </a>
+
+          <a href="/how-it-works" class="hero-btn secondary-btn">
+            Learn More
+          </a>
+        </div>
       </div>
 
-      <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" />
+      <div class="hero-image">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png"
+          alt="AI Detection"
+        />
+      </div>
     </section>
 
     <!-- FEATURES -->
 
     <section class="features">
-      <h2>Key Features</h2>
+      <div class="section-title">
+        <h2>Key Features</h2>
+
+        <p>
+          Powerful AI capabilities designed to provide fast, secure, and highly
+          accurate deepfake image analysis.
+        </p>
+      </div>
 
       <div class="feature-grid">
+        <!-- CARD 1 -->
+
         <div class="card">
+          <div class="card-icon">🧠</div>
+
           <h3>AI Detection</h3>
-          <p>Uses deep learning models to detect manipulated images.</p>
+
+          <p>
+            Uses advanced Vision Transformer deep learning architecture to
+            identify manipulated and AI-generated images with intelligent image
+            analysis.
+          </p>
         </div>
 
+        <!-- CARD 2 -->
+
         <div class="card">
+          <div class="card-icon">⚡</div>
+
           <h3>Fast Processing</h3>
-          <p>Upload an image and receive prediction results instantly.</p>
+
+          <p>
+            Upload an image and receive real-time prediction results instantly
+            using optimized AI processing pipelines.
+          </p>
         </div>
 
+        <!-- CARD 3 -->
+
         <div class="card">
+          <div class="card-icon">🎯</div>
+
           <h3>High Accuracy</h3>
-          <p>Vision Transformer model ensures reliable results.</p>
+
+          <p>
+            Trained on real and deepfake datasets to improve prediction
+            reliability and confidence scoring.
+          </p>
         </div>
 
+        <!-- CARD 4 -->
+
         <div class="card">
-          <h3>Easy Interface</h3>
-          <p>Simple and user-friendly design.</p>
+          <div class="card-icon">🛡️</div>
+
+          <h3>Secure Interface</h3>
+
+          <p>
+            Modern and user-friendly interface designed for smooth image uploads
+            and secure AI-powered analysis.
+          </p>
         </div>
       </div>
     </section>
+
+    <!-- STATS -->
+
+    <section class="stats">
+      <div class="stat-box">
+        <h2>AI</h2>
+        <p>Powered Detection</p>
+      </div>
+
+      <div class="stat-box">
+        <h2>ViT</h2>
+        <p>Transformer Architecture</p>
+      </div>
+
+      <div class="stat-box">
+        <h2>Real-Time</h2>
+        <p>Image Processing</p>
+      </div>
+
+      <div class="stat-box">
+        <h2>Secure</h2>
+        <p>Prediction System</p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
 
     <footer>
       <p>© 2026 Deep Fake Image Detection | Final Year Project</p>

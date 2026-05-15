@@ -2,90 +2,170 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Deep Fake Detection</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
+      }
+
+      :root {
+        --primary: #6c63ff;
+        --primary-dark: #5548ff;
+        --text: #1f2937;
+        --text-light: #6b7280;
       }
 
       body {
-        background: #f5f7fb;
-        color: #333;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(to bottom right, #eef2ff, #f8fbff);
+        color: var(--text);
+        overflow-x: hidden;
       }
 
       /* NAVBAR */
 
       nav {
+        width: 100%;
+        padding: 20px 8%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 80px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
 
-      nav h2 {
-        color: #5b5bd6;
+      .logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary);
       }
 
-      nav a {
+      nav ul {
+        display: flex;
+        gap: 28px;
+        list-style: none;
+      }
+
+      nav ul li a {
         text-decoration: none;
-        margin-left: 25px;
-        color: #555;
+        color: var(--text);
+        font-weight: 500;
+        transition: 0.3s ease;
       }
 
-      nav a:hover {
-        color: #5b5bd6;
+      nav ul li a:hover {
+        color: var(--primary);
       }
 
-      /* PAGE TITLE */
+      /* HERO */
 
-      .page-header {
+      .hero {
         text-align: center;
-        padding: 60px 20px;
+        padding: 90px 20px 50px;
       }
 
-      .page-header h1 {
-        font-size: 36px;
-        margin-bottom: 10px;
+      .tag {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: rgba(108, 99, 255, 0.12);
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 25px;
       }
 
-      /* CONTAINER */
+      .hero h1 {
+        font-size: 58px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        max-width: 750px;
+        margin: auto;
+        color: var(--text-light);
+        font-size: 18px;
+        line-height: 1.8;
+      }
+
+      /* MAIN CONTAINER */
+
+      .wrapper {
+        padding: 20px;
+        margin-bottom: 80px;
+      }
 
       .container {
-        max-width: 500px;
+        max-width: 700px;
         margin: auto;
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(20px);
+        border-radius: 35px;
+        padding: 45px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
         text-align: center;
       }
 
-      /* FILE INPUT */
+      /* UPLOAD BOX */
 
-      .file-input {
-        margin-top: 20px;
+      .upload-box {
+        border: 2px dashed rgba(108, 99, 255, 0.25);
+        border-radius: 28px;
+        padding: 45px 20px;
+        background: rgba(108, 99, 255, 0.03);
+        transition: 0.3s ease;
+      }
+
+      .upload-box:hover {
+        border-color: var(--primary);
+        background: rgba(108, 99, 255, 0.06);
+      }
+
+      .upload-icon {
+        font-size: 55px;
+        margin-bottom: 15px;
+      }
+
+      .upload-box h3 {
+        font-size: 25px;
+        margin-bottom: 12px;
+      }
+
+      .upload-box p {
+        color: var(--text-light);
+        margin-bottom: 25px;
       }
 
       .file-label {
         display: inline-block;
-        padding: 12px 25px;
-        background: #5b5bd6;
+        padding: 14px 28px;
+        background: var(--primary);
         color: white;
-        border-radius: 30px;
+        border-radius: 16px;
         cursor: pointer;
-        margin-bottom: 15px;
+        font-weight: 600;
+        transition: 0.3s ease;
       }
 
       .file-label:hover {
-        background: #4a4ac7;
+        background: var(--primary-dark);
+        transform: translateY(-3px);
       }
 
       input[type="file"] {
@@ -94,60 +174,120 @@
 
       /* IMAGE PREVIEW */
 
-      img {
-        max-width: 250px;
-        margin-top: 15px;
-        border-radius: 10px;
+      .preview-container {
+        margin-top: 25px;
+      }
+
+      #preview {
+        width: 100%;
+        max-width: 320px;
+        border-radius: 24px;
         display: none;
+        margin: auto;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
       }
 
       /* BUTTON */
 
       button {
-        margin-top: 20px;
-        padding: 12px 25px;
+        margin-top: 25px;
+        padding: 15px 32px;
         border: none;
-        background: #5b5bd6;
+        border-radius: 18px;
+        background: var(--primary);
         color: white;
-        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
-        font-size: 15px;
+        transition: 0.3s ease;
+        box-shadow: 0 10px 25px rgba(108, 99, 255, 0.25);
       }
 
       button:hover {
-        background: #4a4ac7;
-      }
-
-      /* RESULT */
-
-      .result {
-        margin-top: 20px;
-        font-size: 18px;
-      }
-
-      /* PROGRESS BAR */
-
-      .progress-container {
-        background: #eee;
-        height: 15px;
-        border-radius: 20px;
-        margin-top: 10px;
-        overflow: hidden;
-      }
-
-      .progress {
-        height: 100%;
-        background: #5b5bd6;
-        width: 0%;
-        transition: width 0.4s;
+        background: var(--primary-dark);
+        transform: translateY(-4px);
       }
 
       /* LOADING */
 
       .loading {
-        margin-top: 10px;
+        margin-top: 20px;
         display: none;
-        color: #777;
+        color: var(--text-light);
+        font-weight: 500;
+      }
+
+      /* RESULT */
+
+      .result-card {
+        display: none;
+        margin-top: 35px;
+        background: rgba(108, 99, 255, 0.05);
+        padding: 28px;
+        border-radius: 24px;
+      }
+
+      .prediction {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .confidence-text {
+        color: var(--text-light);
+        margin-bottom: 18px;
+      }
+
+      /* PROGRESS BAR */
+
+      .progress-container {
+        width: 100%;
+        height: 14px;
+        background: rgba(0, 0, 0, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress {
+        width: 0%;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        transition: width 0.5s ease;
+      }
+
+      /* FOOTER */
+
+      footer {
+        text-align: center;
+        padding: 30px;
+        color: var(--text-light);
+        background: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 18px 20px;
+        }
+
+        nav ul {
+          gap: 15px;
+        }
+
+        .hero h1 {
+          font-size: 40px;
+        }
+
+        .hero p {
+          font-size: 16px;
+        }
+
+        .container {
+          padding: 30px 20px;
+        }
       }
     </style>
   </head>
@@ -156,49 +296,97 @@
     <!-- NAVBAR -->
 
     <nav>
-      <h2>DeepFake AI</h2>
+      <div class="logo">DeepFake AI</div>
 
-       <div>
-    <a href="/">Home</a>
-    <a href="/how-it-works">How It Works</a>
-    <a href="/model-info">Model Info</a>
-  </div>
-</nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/how-it-works">How It Works</a></li>
+        <li><a href="/model-info">Model Info</a></li>
+      </ul>
     </nav>
 
-    <!-- HEADER -->
+    <!-- HERO -->
 
-    <section class="page-header">
+    <section class="hero">
+      <div class="tag">AI Powered Deep Fake Detection</div>
+
       <h1>Deep Fake Image Detection</h1>
-      <p>Upload an image and our AI will analyze it.</p>
+
+      <p>
+        Upload an image and let our Vision Transformer based AI analyze image
+        patterns, textures, and inconsistencies to detect manipulated or
+        AI-generated content.
+      </p>
     </section>
 
-    <!-- DETECTION BOX -->
+    <!-- MAIN -->
 
-    <div class="container">
-      <label for="imageInput" class="file-label"> Choose Image </label>
+    <div class="wrapper">
+      <div class="container">
+        <!-- UPLOAD SECTION -->
 
-      <input
-        type="file"
-        id="imageInput"
-        accept="image/*"
-        onchange="previewImage(event)"
-      />
+        <div class="upload-box" id="uploadBox">
+          <div class="upload-icon">🖼️</div>
 
-      <img id="preview" />
+          <h3>Upload Your Image</h3>
 
-      <br />
+          <p>Upload your image or choose a file to begin AI detection.</p>
 
-      <button onclick="submitImage()">Detect Image</button>
+          <label for="imageInput" class="file-label"> Choose Image </label>
 
-      <div class="loading" id="loading">Processing Image...</div>
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            onchange="previewImage(event)"
+          />
+        </div>
 
-      <div class="result" id="result"></div>
+        <!-- IMAGE PREVIEW -->
 
-      <div class="progress-container">
-        <div class="progress" id="progress"></div>
+        <div class="preview-container">
+          <img id="preview" />
+        </div>
+
+        <!-- ANALYZE BUTTON -->
+
+        <button id="analyzeBtn" onclick="submitImage()">Analyze Image</button>
+
+        <!-- NEW IMAGE BUTTON -->
+
+        <button
+          id="newImageBtn"
+          onclick="uploadNewImage()"
+          style="display: none"
+        >
+          Upload New Image
+        </button>
+
+        <!-- LOADING -->
+
+        <div class="loading" id="loading">
+          Processing image with AI model...
+        </div>
+
+        <!-- RESULT -->
+
+        <div class="result-card" id="resultCard">
+          <div class="prediction" id="predictionText"></div>
+
+          <div class="confidence-text" id="confidenceText"></div>
+
+          <div class="progress-container">
+            <div class="progress" id="progress"></div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- FOOTER -->
+
+    <footer>
+      <p>© 2026 Deep Fake Image Detection | Final Year Project</p>
+    </footer>
 
     <script>
       /* IMAGE PREVIEW */
@@ -206,18 +394,30 @@
       function previewImage(event) {
         const preview = document.getElementById("preview");
 
-        preview.src = URL.createObjectURL(event.target.files[0]);
+        const uploadBox = document.getElementById("uploadBox");
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        preview.src = URL.createObjectURL(file);
+
         preview.style.display = "block";
+
+        /* HIDE UPLOAD SECTION */
+
+        uploadBox.style.display = "none";
       }
 
-      /* SUBMIT IMAGE */
+      /* ANALYZE IMAGE */
 
       function submitImage() {
         const input = document.getElementById("imageInput");
+
         const file = input.files[0];
 
         if (!file) {
-          alert("Please select an image");
+          alert("Please select an image first.");
 
           return;
         }
@@ -239,19 +439,74 @@
 
             const confidence = (data.confidence * 100).toFixed(2);
 
-            document.getElementById("result").innerHTML =
-              "<b>Prediction:</b> " +
-              data.prediction +
-              "<br><b>Confidence:</b> " +
-              confidence +
-              "%";
+            /* SHOW RESULT */
+
+            document.getElementById("resultCard").style.display = "block";
+
+            document.getElementById("predictionText").innerHTML =
+              data.prediction;
+
+            document.getElementById("confidenceText").innerHTML =
+              "Confidence Score: " + confidence + "%";
 
             document.getElementById("progress").style.width = confidence + "%";
+
+            /* SHOW NEW IMAGE BUTTON */
+
+            document.getElementById("newImageBtn").style.display =
+              "inline-block";
           })
 
           .catch((err) => {
-            document.getElementById("loading").innerHTML = "Error occurred";
+            document.getElementById("loading").innerHTML =
+              "Error occurred while processing image.";
           });
+      }
+
+      /* RESET FOR NEW IMAGE */
+
+      function uploadNewImage() {
+        const preview = document.getElementById("preview");
+
+        const uploadBox = document.getElementById("uploadBox");
+
+        const input = document.getElementById("imageInput");
+
+        const resultCard = document.getElementById("resultCard");
+
+        const progress = document.getElementById("progress");
+
+        const loading = document.getElementById("loading");
+
+        /* RESET FILE INPUT */
+
+        input.value = "";
+
+        /* HIDE IMAGE */
+
+        preview.style.display = "none";
+
+        preview.src = "";
+
+        /* SHOW UPLOAD BOX AGAIN */
+
+        uploadBox.style.display = "block";
+
+        /* HIDE RESULT */
+
+        resultCard.style.display = "none";
+
+        /* RESET PROGRESS */
+
+        progress.style.width = "0%";
+
+        /* HIDE LOADING */
+
+        loading.style.display = "none";
+
+        /* HIDE NEW IMAGE BUTTON */
+
+        document.getElementById("newImageBtn").style.display = "none";
       }
     </script>
   </body>

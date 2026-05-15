@@ -1,4 +1,5 @@
 <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,129 +7,307 @@
 
     <title>How It Works - Deep Fake Detection</title>
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
+      }
+
+      :root {
+        --primary: #6c63ff;
+        --primary-dark: #5548ff;
+        --bg: #f4f7ff;
+        --text: #1f2937;
+        --text-light: #6b7280;
+        --white: #ffffff;
+        --border: rgba(255, 255, 255, 0.4);
       }
 
       body {
-        background: #f5f7fb;
-        color: #333;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(to bottom right, #eef2ff, #f8fbff);
+        color: var(--text);
+        overflow-x: hidden;
       }
 
       /* NAVBAR */
 
       nav {
+        width: 100%;
+        padding: 20px 8%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 80px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
       }
 
-      nav h2 {
-        color: #5b5bd6;
+      .logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary);
       }
 
-      nav a {
+      nav ul {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+      }
+
+      nav ul li a {
         text-decoration: none;
-        margin-left: 25px;
-        color: #555;
+        color: var(--text);
+        font-weight: 500;
+        transition: 0.3s ease;
       }
 
-      nav a:hover {
-        color: #5b5bd6;
+      nav ul li a:hover {
+        color: var(--primary);
       }
 
-      /* HEADER */
+      /* HERO */
 
-      .header {
+      .hero {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        padding: 70px 20px;
-        background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+        padding: 100px 20px;
+        position: relative;
       }
 
-      .header h1 {
-        font-size: 40px;
-        margin-bottom: 10px;
+      .hero::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: rgba(108, 99, 255, 0.15);
+        filter: blur(120px);
+        border-radius: 50%;
+        top: -100px;
+        left: -100px;
       }
 
-      .header p {
-        color: #666;
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 850px;
+      }
+
+      .hero-tag {
+        display: inline-block;
+        padding: 10px 18px;
+        background: rgba(108, 99, 255, 0.12);
+        color: var(--primary);
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 25px;
+      }
+
+      .hero h1 {
+        font-size: 68px;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        font-weight: 800;
+      }
+
+      .hero p {
+        font-size: 20px;
+        line-height: 1.8;
+        color: var(--text-light);
+        margin-bottom: 40px;
+      }
+
+      .hero-btns {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-3px);
+      }
+
+      .btn-secondary {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: white;
+        color: var(--text);
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-3px);
+      }
+
+      /* SECTION */
+
+      section {
+        padding: 100px 8%;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+      }
+
+      .section-title h2 {
+        font-size: 46px;
+        margin-bottom: 18px;
+      }
+
+      .section-title p {
+        color: var(--text-light);
+        max-width: 700px;
+        margin: auto;
+        line-height: 1.7;
       }
 
       /* STEPS */
 
-      .steps {
-        padding: 80px;
-      }
-
-      .step-grid {
+      .steps-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 30px;
       }
 
-      .step {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-        text-align: center;
-        transition: 0.3s;
+      .step-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 35px;
+        transition: 0.35s ease;
+        position: relative;
+        overflow: hidden;
       }
 
-      .step:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+      .step-card::before {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        background: rgba(108, 99, 255, 0.08);
+        border-radius: 50%;
+        top: -50px;
+        right: -50px;
+      }
+
+      .step-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.08);
       }
 
       .step-number {
-        font-size: 28px;
+        width: 60px;
+        height: 60px;
+        background: var(--primary);
+        color: white;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
         font-weight: bold;
-        color: #5b5bd6;
-        margin-bottom: 10px;
+        margin-bottom: 25px;
       }
 
-      .step h3 {
-        margin-bottom: 10px;
+      .step-card h3 {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      .step-card p {
+        color: var(--text-light);
+        line-height: 1.7;
       }
 
       /* PIPELINE */
 
-      .pipeline {
-        padding: 80px;
-        background: #f8f9ff;
-        text-align: center;
-      }
-
-      .pipeline h2 {
-        margin-bottom: 40px;
-      }
-
-      .pipeline-box {
-        max-width: 900px;
+      .pipeline-container {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        padding: 60px;
+        max-width: 1000px;
         margin: auto;
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-        line-height: 1.7;
-        color: #555;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      }
+
+      .pipeline-container p {
+        color: var(--text-light);
+        line-height: 2;
+        font-size: 17px;
+        margin-bottom: 24px;
       }
 
       /* FOOTER */
 
       footer {
-        background: white;
+        padding: 35px 20px;
         text-align: center;
-        padding: 20px;
-        color: #777;
-        margin-top: 40px;
+        color: var(--text-light);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        background: white;
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 18px 20px;
+        }
+
+        nav ul {
+          gap: 16px;
+        }
+
+        .hero h1 {
+          font-size: 42px;
+        }
+
+        .hero p {
+          font-size: 17px;
+        }
+
+        section {
+          padding: 80px 20px;
+        }
+
+        .section-title h2 {
+          font-size: 34px;
+        }
+
+        .pipeline-container {
+          padding: 30px;
+        }
       }
     </style>
   </head>
@@ -137,75 +316,133 @@
     <!-- NAVBAR -->
 
     <nav>
-      <h2>DeepFake AI</h2>
+      <div class="logo">DeepFake AI</div>
 
-      <div>
-    <a href="/">Home</a>
-    <a href="/detect">Detect</a>
-    <a href="/model-info">Model Info</a>
-  </div>
-</nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/detect">Detect</a></li>
+        <li><a href="/model-info">Model Info</a></li>
+      </ul>
     </nav>
 
-    <!-- HEADER -->
+    <!-- HERO -->
 
-    <section class="header">
-      <h1>How Deep Fake Detection Works</h1>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-tag">AI Powered Deep Fake Detection</div>
 
-      <p>Understanding the AI pipeline behind our system</p>
-    </section>
+        <h1>Understand How Our AI Detects DeepFake Images</h1>
 
-    <!-- STEPS -->
+        <p>
+          Explore the intelligent pipeline behind our Vision Transformer based
+          Deep Fake Detection system that analyzes image patterns, textures,
+          inconsistencies, and manipulations with advanced AI models.
+        </p>
 
-    <section class="steps">
-      <div class="step-grid">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Upload Image</h3>
-          <p>User uploads an image through the detection interface.</p>
-        </div>
+        <div class="hero-btns">
+          <a href="/detect" class="btn btn-primary">Start Detection</a>
 
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Image Preprocessing</h3>
-          <p>The system resizes and normalizes the image for AI processing.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>AI Model Analysis</h3>
-          <p>The Vision Transformer model analyzes image patterns.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">4</div>
-          <h3>Prediction Result</h3>
-          <p>The model predicts whether the image is Real or DeepFake.</p>
+          <a href="/model-info" class="btn btn-secondary">
+            Learn About Model
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- PIPELINE EXPLANATION -->
+    <!-- STEPS -->
 
-    <section class="pipeline">
-      <h2>AI Detection Pipeline</h2>
+    <section>
+      <div class="section-title">
+        <h2>Detection Process</h2>
 
-      <div class="pipeline-box">
         <p>
-          Our Deep Fake Image Detection system uses a deep learning model based
-          on Vision Transformer (ViT). When a user uploads an image, the system
-          first preprocesses the image by resizing and converting it into
-          tensors. The image is then passed into the trained model, which
-          analyzes patterns, textures, and inconsistencies often found in
-          deepfake images.
+          Our AI model follows a structured and intelligent workflow to analyze
+          uploaded images and identify whether they are authentic or
+          AI-generated.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+
+          <h3>Upload Image</h3>
+
+          <p>
+            Users upload an image through the detection interface where the
+            system securely receives and validates the image before processing.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+
+          <h3>Image Preprocessing</h3>
+
+          <p>
+            The uploaded image is resized, normalized, and converted into tensor
+            data to make it compatible with the AI model input requirements.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+
+          <h3>AI Model Analysis</h3>
+
+          <p>
+            Our Vision Transformer (ViT) model analyzes facial patterns,
+            textures, shadows, and inconsistencies commonly found in deepfake
+            generated images.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+
+          <h3>Prediction Result</h3>
+
+          <p>
+            The system generates prediction scores and displays whether the
+            uploaded image is Real or DeepFake along with confidence accuracy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIPELINE -->
+
+    <section>
+      <div class="section-title">
+        <h2>AI Detection Pipeline</h2>
+
+        <p>
+          A detailed overview of how the deep learning architecture processes
+          and classifies uploaded images.
+        </p>
+      </div>
+
+      <div class="pipeline-container">
+        <p>
+          Our Deep Fake Image Detection system is powered by a Vision
+          Transformer (ViT) deep learning architecture trained to identify
+          manipulated and AI-generated facial content. When an image is
+          uploaded, the system first preprocesses the image by resizing,
+          normalizing, and converting it into tensors suitable for model input.
         </p>
 
-        <br />
+        <p>
+          The transformed image is then passed through the Vision Transformer
+          network, where the model extracts visual features and analyzes
+          patterns such as lighting inconsistencies, texture distortions,
+          unnatural facial blending, and synthetic artifacts typically found in
+          deepfake content.
+        </p>
 
         <p>
-          The model generates prediction scores and determines whether the image
-          is real or fake. Finally, the system displays the prediction along
-          with a confidence score to the user.
+          Finally, the model calculates prediction probabilities and returns the
+          classification result as either Real or DeepFake along with a
+          confidence score, helping users quickly verify image authenticity.
         </p>
       </div>
     </section>
